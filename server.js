@@ -4,6 +4,54 @@ const Room = require('./classes/Room')
 let users = [];
 let rooms = [];
 
+
+
+// Room Functions //
+
+const addRoom = (room) => {
+    if (checkIfRoomExist(room.code).length > 0) {
+        room.code = room.getCode()
+        return addRoom(room)
+    }
+    rooms.push(room)
+    return room
+}
+
+const checkIfRoomExist = (roomCode) => {
+    return rooms.map(existRoom => existRoom?.code === roomCode ? alreadyExist = true : alreadyExist = false)
+}
+
+const createRoom = (user) => {
+    if (user.room) {
+        console.log('the user already have a room')
+    } else {
+        let newRoom = new Room(user)
+        user.room = newRoom.code
+        addRoom(newRoom)
+    }
+}
+
+const findRoomByCode = (code) => {
+    let room = null
+    rooms.map((object) => object.code == code ? room = object.printData() : null)
+    return room
+}
+
+// Room Functions //
+
+
+
+
+
+
+
+
+
+
+
+
+// User Functions //
+
 const removeUser = (socketId) => {
     users = users.filter((user) => user.socketId !== socketId);
   };
@@ -16,27 +64,6 @@ const addUser = (username, isDJ, socket) => {
     }
     users.push(newUser)
     return newUser
-}
-
-const addRoom = (room) => {
-    let alreadyExist = false
-    rooms.map(existRoom => existRoom?.code === room.code ? alreadyExist = true : alreadyExist = false)
-    if (alreadyExist) {
-        room.code = room.getCode()
-        return addRoom(room)
-    }
-    rooms.push(room)
-    return room
-}
-
-const createRoom = (user) => {
-    if (user.room) {
-        console.log('the user already have a room')
-    } else {
-        let newRoom = new Room(user.username, user.socketId)
-        user.room = newRoom.printData()
-        addRoom(newRoom)
-    }
 }
 
 const checkIfUserExist = (username, list) => {
@@ -57,11 +84,15 @@ const findUserByName = (username, list) => {
     return user
 }
 
-const findRoomByCode = (code) => {
-    let room = null
-    rooms.map((object) => object.code == code ? room = object.printData() : null)
-    return room
-}
+
+// user Functions//
+
+
+
+
+
+
+
 
 const io = require("socket.io")(8900, {
     cors: {
@@ -86,8 +117,10 @@ const io = require("socket.io")(8900, {
     })
 
     socket.on('changeRoomName', (data) => {
+        console.log(data)
         const room = findRoomByCode(data.code)
         room.roomName = data.title
+        console.log("users: " +  users + "rooms: " + rooms)
         room.users.map(user => io.to(user.socketId).emit('newRoomData'))
     })
 

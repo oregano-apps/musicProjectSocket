@@ -1,8 +1,8 @@
 class Room{
-    constructor(dj, socketId) {
+    constructor(dj) {
         this.roomName = "Oregano Music",
         this.code = this.getCode(),
-        this.users = [{username: dj, socketId: socketId}]
+        this.users = [dj]
         this.active = false
         
     }
