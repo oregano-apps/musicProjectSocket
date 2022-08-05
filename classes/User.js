@@ -1,9 +1,10 @@
 class User{
-    constructor(username, isDJ, socketId) {
+    constructor(username, isDJ, socketId, avatarSeed) {
         this.username = username,
         this.room = null,
         this.isDJ = isDJ,
         this.socketId = socketId
+        this.avatarSeed = avatarSeed
     }
 
     sendAllData = () => {
